@@ -4,3 +4,15 @@ compiler:
   solc:
     remappings:
       - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.6.0'
+dotenv: .env
+wallets:
+  main_key: ${MAIN_KEY}
+networks:
+  ftm-test:
+    main_wallet: "<wallet_address>"
+    player1_wallet: "<wallet_address>"
+    player2_wallet: "<wallet_address>"
+  bsc-test:
+    main_wallet: "<wallet_address>"
+    player1_wallet: "<wallet_address>"
+    player2_wallet: "<wallet_address>"

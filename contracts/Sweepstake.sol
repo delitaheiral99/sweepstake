@@ -85,7 +85,7 @@ contract Sweepstake is Ownable {
         bonusPoints = 2;
     }
 
-    function createGame(uint8 team1, uint8 team2, uint32 startTime) public onlyOwner {
+    function createGame(uint8 team1, uint8 team2, uint32 startTime) external onlyOwner {
         require(team1 != team2, "Teams must be different");
         require(team1 > 0 && team2 > 0, "Teams must be greater than 0");
         require(startTime > block.timestamp, "Start time must be in the future");
@@ -95,7 +95,7 @@ contract Sweepstake is Ownable {
         emit GameCreated(gameCount, team1, team2, startTime);
     }
 
-    function updateGame(uint8 id, uint8 team1, uint8 team2, uint32 startTime) public onlyOwner {
+    function updateGame(uint8 id, uint8 team1, uint8 team2, uint32 startTime) external onlyOwner {
         require(team1 != team2, "Teams must be different");
         require(team1 > 0 && team2 > 0, "Teams must be greater than 0");
         require(games[id].team1 != team1 || games[id].team2 != team2, "Teams must be different");
@@ -105,7 +105,7 @@ contract Sweepstake is Ownable {
         emit GameUpdated(id, team1, team2, startTime);
     }
 
-    function updateScore(uint8 id, uint8 team1Score, uint8 team2Score) public onlyOwner {
+    function updateScore(uint8 id, uint8 team1Score, uint8 team2Score) external onlyOwner {
         games[id].team1Score = team1Score;
         games[id].team2Score = team2Score;
         emit ScoreUpdated(id, team1Score, team2Score);
@@ -120,7 +120,7 @@ contract Sweepstake is Ownable {
         emit PlayerRegistered(msg.sender);
     }
 
-    function placeBet(uint8 gameId, uint8 team1Score, uint8 team2Score) public payable {
+    function placeBet(uint8 gameId, uint8 team1Score, uint8 team2Score) external payable {
         require(registeredPlayers[msg.sender], "Player is not registered");
         require(msg.value == betFee, "Bet fee is not correct");
         require(games[gameId].team1 > 0, "Game does not exist");
@@ -136,7 +136,7 @@ contract Sweepstake is Ownable {
         emit BetPlaced(gameId, team1Score, team2Score, msg.sender);
     }
 
-    function updateBet(uint8 gameId, uint8 team1Score, uint8 team2Score) public payable {
+    function updateBet(uint8 gameId, uint8 team1Score, uint8 team2Score) external payable {
         require(msg.value == betFee, "Bet fee is not correct");
         require(betByPlayerGame[msg.sender][gameId] > 0, "Player has not placed a bet for this game");
         uint256 betId = betByPlayerGame[msg.sender][gameId];
@@ -146,7 +146,7 @@ contract Sweepstake is Ownable {
         emit BetUpdated(gameId, team1Score, team2Score, msg.sender);
     }
 
-    function updatePoints(uint8 gameId, uint256[] memory _betIds) public onlyOwner {
+    function updatePoints(uint8 gameId, uint256[] memory _betIds) external onlyOwner {
         uint256 _points;
         Game memory game = games[gameId];
         for (uint256 i = 0; i < _betIds.length; i++) {
@@ -184,42 +184,61 @@ contract Sweepstake is Ownable {
 
     // dev: adding this function as a fallback to reset the points
     // dev: in case of a manual mistake
-    function resetPoints(uint256[] memory _playerIds) public onlyOwner {
+    function resetPoints(uint256[] memory _playerIds) external onlyOwner {
         for (uint256 i = 0; i < _playerIds.length; i++) {
             points[players[_playerIds[i]]] = 0;
             emit PointsUpdated(players[_playerIds[i]], 0);
         }
     }
 
-    function setPointsforResult(uint256 _pointForResult) public onlyOwner {
+    function setPointsforResult(uint256 _pointForResult) external onlyOwner {
         pointForResult = _pointForResult;
         emit PointForResultUpdated(_pointForResult);
     }
 
-    function setPointsforScore(uint256 _pointForScore) public onlyOwner {
+    function setPointsforScore(uint256 _pointForScore) external onlyOwner {
         pointForScore = _pointForScore;
         emit PointForScoreUpdated(_pointForScore);
     }
 
-    function setBonusPoints(uint256 _bonusPoints) public onlyOwner {
+    function setBonusPoints(uint256 _bonusPoints) external onlyOwner {
         bonusPoints = _bonusPoints;
         emit BonusPointsUpdated(_bonusPoints);
     }
 
-    function setRegistrationFee(uint256 _registrationFee) public onlyOwner {
+    function setRegistrationFee(uint256 _registrationFee) external onlyOwner {
         registrationFee = _registrationFee;
         emit RegistrationFeeUpdated(_registrationFee);
     }
 
-    function setBetFee(uint256 _betFee) public onlyOwner {
+    function setBetFee(uint256 _betFee) external onlyOwner {
         betFee = _betFee;
         emit BetFeeUpdated(_betFee);
     }
 
-    function withdraw() public onlyOwner {
+    function withdraw() external onlyOwner {
         uint256 balance = address(this).balance;
-        payable(msg.sender).transfer(balance);
         emit Withdraw(msg.sender, balance);
+        payable(msg.sender).transfer(balance);
+    }
+
+    function getGame(uint8 id) external view returns (uint8, uint8, uint8, uint8, uint32) {
+        return (
+            games[id].team1Score,
+            games[id].team2Score,
+            games[id].team1,
+            games[id].team2,
+            games[id].startTime
+        );
+    }
+
+    function getBet(uint256 id) external view returns (uint8, uint8, uint8, address) {
+        return (
+            bets[id].gameId,
+            bets[id].team1Score,
+            bets[id].team2Score,
+            bets[id].player
+        );
     }
 
     receive() external payable {

@@ -15,6 +15,6 @@ def get_accounts():
     else:
         return {
             "main_wallet": accounts.add(config["wallets"]["main_key"]),
-            "player1_wallet": config["networks"][network.show_active()]["owner_wallet"],
-            "player2_wallet": config["networks"][network.show_active()]["renter_wallet"],
+            "player1_wallet": config["networks"][network.show_active()]["player1_wallet"],
+            "player2_wallet": config["networks"][network.show_active()]["player2_wallet"],
         }
