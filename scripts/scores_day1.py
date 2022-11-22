@@ -1,5 +1,6 @@
 from scripts.deploy import deploy
 from scripts.teams import Team
+from scripts.helpers import get_accounts
 
 
 MATCHES = [
@@ -12,7 +13,7 @@ MATCHES = [
 # File created for integration with the frontend dapp
 def add_scores():
     contract = deploy()
-
+    accounts = get_accounts()
     playerCount = contract.playerCount()
 
     #update matches scores
@@ -27,10 +28,15 @@ def add_scores():
                 bets.append(bet)
 
         #update match score
-        contract.updateScore(match[0], match[1], match[2])
+        contract.updateScore(
+            match[0],
+            match[1],
+            match[2],
+            {'from': accounts['main_wallet']}
+        )
 
         #update player points
-        contract.updatePoints(match[0], bets)
+        contract.updatePoints(match[0], bets, {'from': accounts['main_wallet']})
 
 
 def main():
