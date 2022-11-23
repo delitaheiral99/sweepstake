@@ -20,9 +20,10 @@ def calculate_points():
     }
     for i in range(1, playerCount + 1):
         player = contract.players(i)
+        points = contract.points(player)
         ranking['ranking'].append({
-            'wallet': player[1],
-            'points': player[2],
+            'wallet': player,
+            'points': points
         })
 
     # Write to file
