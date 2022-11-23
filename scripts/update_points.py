@@ -11,13 +11,11 @@ def calculate_points():
     # Get players
     playerCount = contract.playerCount()
     ranking = {
-        "stats": [
-            {
-                "playerCount": playerCount,
-                "betCount": contract.betCount(),
-                "totalAmount": contract.balance(),
-            }
-        ],
+        "stats": {
+            "playerCount": playerCount,
+            "betCount": contract.betCount(),
+            "totalAmount": contract.balance() * 0.000000000000000001,
+        },
         "ranking": []
     }
     for i in range(1, playerCount + 1):
