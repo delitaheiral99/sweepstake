@@ -4,10 +4,10 @@ from scripts.helpers import get_accounts
 
 
 MATCHES = [
-    [21, 0, 1], # [Team.TUN, Team.AUS, "2022-11-26T10:00:00Z"], #21
-    [22, 2, 0], # [Team.POL, Team.KSA, "2022-11-26T13:00:00Z"], #22
-    [23, 2, 1], # [Team.FRA, Team.DEN, "2022-11-26T16:00:00Z"], #23
-    [24, 2, 0], # [Team.ARG, Team.MEX, "2022-11-26T19:00:00Z"], #24
+    [25, 0, 1], # [Team.JPN, Team.CRC, "2022-11-27T10:00:00Z"], #25
+    [26, 0, 2], # [Team.BEL, Team.MAR, "2022-11-27T13:00:00Z"], #26
+    [27, 4, 1], # [Team.CRO, Team.CAN, "2022-11-27T16:00:00Z"], #27
+    [28, 1, 1], # [Team.ESP, Team.GER, "2022-11-27T19:00:00Z"], #28
 ]
 
 # File created for integration with the frontend dapp
